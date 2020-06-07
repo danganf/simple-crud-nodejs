@@ -1,9 +1,7 @@
 "use restrict";
 
-const mongoose = require("mongoose");
-const MProduct = mongoose.model("Product");
 const ValidContracts = require('../validators/valid');
-const repository = require('../repositories/product-repository');
+const repository     = require('../repositories/product-repository');
 
 exports.get = async (req, res, next) => {
 
@@ -59,7 +57,7 @@ exports.post = async (req, res, next) => {
         
         try{
             await repository.create( req.body );
-            res.status(201).send({ message: "Registros salvo com sucesso" });
+            res.status(201).send({ message: "Registro salvo com sucesso" });
         } catch(e){
             res.status(400).send({ message: "Falha ao salvar o registro", data: e });
         };

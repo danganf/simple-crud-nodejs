@@ -1,6 +1,7 @@
 "use restrict";
 
 const mongoose = require("mongoose");
+require('../models/product');
 const MProduct = mongoose.model("Product");
 
 exports.get = async () => {
