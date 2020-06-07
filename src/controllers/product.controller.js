@@ -2,23 +2,23 @@
 
 const mongoose = require("mongoose");
 const MProduct = mongoose.model("Product");
+const ValidContracts = require('../validators/valid');
+const repository = require('../repositories/product-repository');
 
 exports.get = (req, res, next) => {
   
-  MProduct
-    .find({active: true}, {__v: 0})
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((e) => {
-      res.status(400).send({ message: "Nenhum registro localizado", data: e });
-    });
+  repository.get()
+        .then((data) => {
+          res.status(200).send(data);
+        })
+        .catch((e) => {
+          res.status(400).send({ message: "Nenhum registro localizado", data: e });
+        });
 };
 
 exports.getBySlug = (req, res, next) => {
   
-  MProduct
-    .findOne({slug: req.params.value, active: true} , 'title description price slug tags' )
+  repository.getBySlug( req.params.value )
     .then((data) => {
       res.status(200).send(data || []);
     })
@@ -29,8 +29,7 @@ exports.getBySlug = (req, res, next) => {
 
 exports.getByTag = (req, res, next) => {
   
-  MProduct
-    .find({tags: req.params.value, active: true} , 'title description price slug tags' )
+  repository.getByTag( req.params.value )
     .then((data) => {
       res.status(200).send(data || []);
     })
@@ -40,8 +39,8 @@ exports.getByTag = (req, res, next) => {
 };
 
 exports.getById = (req, res, next) => {
-  MProduct
-    .findById(req.params.value, {__v: 0} )
+  
+  repository.getById(req.params.value )
     .then((data) => {
       res.status(200).send(data || []);
     })
@@ -51,28 +50,29 @@ exports.getById = (req, res, next) => {
 };
 
 exports.post = (req, res, next) => {
-  let product = new MProduct(req.body);
-  product
-    .save()
-    .then((x) => {
-      res.status(201).send({ message: "Registros salvo com sucesso" });
-    })
-    .catch((e) => {
-      res.status(400).send({ message: "Falha ao salvar o registro", data: e });
-    });
+
+  let valid = new ValidContracts();
+  valid.hasMinLen( req.body.title, 3, 'Titulo tem que ter no minimo 3 caracteres' );
+  valid.hasMinLen( req.body.slug, 3, 'Slug tem que ter no minimo 3 caracteres' );
+  valid.hasMinLen( req.body.description, 2, 'Descrição tem que ter no minimo 3 caracteres' );
+
+  if( valid.isValid() ){
+    repository.create( req.body )
+      .then((x) => {
+        res.status(201).send({ message: "Registros salvo com sucesso" });
+      })
+      .catch((e) => {
+        res.status(400).send({ message: "Falha ao salvar o registro", data: e });
+      });
+  } else {
+      res.status(400).send( valid.errors() );
+  }
+
 };
 
 exports.put = (req, res, next) => {  
-  MProduct
-    .findByIdAndUpdate( req.params.id, {
-      $set: {
-        title: req.body.title,
-        description: req.body.description,
-        price: req.body.price,
-        active: req.body.active,
-        tags: req.body.tags,
-      }
-    } )
+  repository
+    .update( req.params.id, req.body )
     .then((x) => {
       res.status(200).send({ message: "Registros atualizado com sucesso" });
     })
@@ -82,8 +82,8 @@ exports.put = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-  MProduct
-    .findByIdAndDelete(req.params.id)
+  repository
+    .delete(req.params.id)
     .then((data) => {
       res.status(200).send({ message: "Registros deletado com sucesso" });
     })
