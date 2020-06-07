@@ -6,14 +6,12 @@ const mongoose   = require('mongoose');
 const app        = express();
 const router     = express.Router();
 
-//CONECTAR BANCO DE DADOS
-mongoose.connect('mongodb://localhost:27017/course', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-});
+const {CONFIG_MONGO_CONN_STRING} = require('./config');
 
-app.use( bodyParser.json() );
+//CONECTAR BANCO DE DADOS
+mongoose.connect( CONFIG_MONGO_CONN_STRING, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true } );
+
+app.use( bodyParser.json( { limit: '5mb' } ) );
 app.use( bodyParser.urlencoded( { extended: false } ) );
 
 //CARREGAR ROTAS

@@ -24,7 +24,11 @@ exports.post = async (req, res, next) => {
     if( valid.isValid() ){
         
         try{
-            await repository.create( req.body );
+            await repository.create( {
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password,
+            } );
             res.status(201).send({ message: "Registro salvo com sucesso" });
         } catch(e){
             res.status(400).send({ message: "Falha ao salvar o registro", data: e });
