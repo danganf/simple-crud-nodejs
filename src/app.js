@@ -6,7 +6,7 @@ const mongoose   = require('mongoose');
 const app        = express();
 const router     = express.Router();
 
-const {CONFIG_MONGO_CONN_STRING} = require('./config');
+const {CONFIG_MONGO_CONN_STRING} = require('./configs/config-default');
 
 //CONECTAR BANCO DE DADOS
 mongoose.connect( CONFIG_MONGO_CONN_STRING, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true } );

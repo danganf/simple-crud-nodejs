@@ -1,12 +1,14 @@
 "use restrict";
 
-const ValidContracts = require('../validators/valid');
-const repository     = require('../repositories/customer-repository');
+const valid        = require('../validators/valid');
+const repository   = require('../repositories/customer-repository');
+const emailService = require('../services/email-service');
 
 exports.get = async (req, res, next) => {
 
     try {
         let data = await repository.get();
+        await ( new emailService() ).send('danielazevedo@gmail.com', 'send test', 'send test body');
         res.status(200).send(data);
     } catch(e){
         res.status(500).send({ message: "Nenhum registro localizado", data: e });
@@ -17,7 +19,6 @@ exports.get = async (req, res, next) => {
 
 exports.post = async (req, res, next) => {
 
-    let valid = new ValidContracts();
     valid.hasMinLen( req.body.name, 3, 'Nome tem que ter no minimo 3 caracteres' );
     valid.isEmail( req.body.email, 'Email invalido' );
     valid.hasMinLen( req.body.password, 4, 'Senha tem que ter no minimo 4 caracteres' );    

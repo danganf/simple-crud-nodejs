@@ -2,7 +2,7 @@
 
 const mongoose                = require("mongoose");
 const md5                     = require("md5");
-const {CONFIG_SALT_CRIPT_KEY} = require('../config');
+const {CONFIG_SALT_CRIPT_KEY} = require('../configs/config-default');
 require('../models/customer');
 const modelMain = mongoose.model("Customer");
 

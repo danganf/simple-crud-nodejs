@@ -1,7 +1,7 @@
 "use restrict";
 
-const ValidContracts = require('../validators/valid');
-const repository     = require('../repositories/product-repository');
+const valid      = require('../validators/valid');
+const repository = require('../repositories/product-repository');
 
 exports.get = async (req, res, next) => {
 
@@ -49,7 +49,6 @@ exports.getById = async (req, res, next) => {
 
 exports.post = async (req, res, next) => {
 
-    let valid = new ValidContracts();
     valid.hasMinLen( req.body.title, 3, 'Titulo tem que ter no minimo 3 caracteres' );
     valid.hasMinLen( req.body.slug, 3, 'Slug tem que ter no minimo 3 caracteres' );
     valid.hasMinLen( req.body.description, 2, 'Descrição tem que ter no minimo 3 caracteres' );    

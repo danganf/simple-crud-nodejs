@@ -2,7 +2,7 @@
 
 let errors = [];
 
-class ValidationContract {
+class validationContract {
     constructor() {
         errors = [];
     }
@@ -38,4 +38,4 @@ class ValidationContract {
     }
 }
 
-module.exports = ValidationContract;
+module.exports = new validationContract();
