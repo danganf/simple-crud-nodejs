@@ -30,10 +30,10 @@ class ValidationContract {
     errors() {
         return errors;
     }
-    async clear() {
+    clear() {
         errors = [];
     }
-    async isValid() {
+    isValid() {
         return errors.length == 0;
     }
 }
